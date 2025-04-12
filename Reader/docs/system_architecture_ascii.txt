@@ -1,0 +1,331 @@
++----------------------------------------------------------------------------------------------------------+
+|                                           Reader System Architecture                                      |
++----------------------------------------------------------------------------------------------------------+
+
++----------------+     +----------------+     +----------------+     +----------------+     +----------------+
+|    Client      |     |   API Layer    |     | Core Services  |     |   Processing   |     |    Storage     |
++----------------+     +----------------+     +----------------+     +----------------+     +----------------+
+|                |     |                |     |                |     |                |     |                |
+|  Web Interface |---->| API Gateway    |---->| Image Proc.    |---->| Image Engine   |---->| File Storage   |
+|  API Client    |     | Authentication |     | Data Management|     | Data Engine    |     | Database       |
+|                |     | Rate Limiter   |     | User Management|     |                |     | Cache          |
+|                |     | Cache          |     | Storage        |     |                |     |                |
+|                |     |                |     | Analytics      |     |                |     |                |
++----------------+     +----------------+     +----------------+     +----------------+     +----------------+
+                                                                     ^
+                                                                     |
+                                                                     v
++----------------+                                                   +----------------+
+|   Security     |                                                   |   External     |
++----------------+                                                   +----------------+
+|                |                                                   |                |
+| Authentication |-------------------------------------------------->| OAuth Providers|
+| Security       |                                                   | Cloud Storage  |
+|                |                                                   | Monitoring     |
+|                |                                                   | Backup         |
++----------------+                                                   +----------------+
+
++----------------------------------------------------------------------------------------------------------+
+|                                      Detailed Process Flow                                                |
++----------------------------------------------------------------------------------------------------------+
+
+                                [Start]
+                                   |
+                                   v
+                        +---------------------+
+                        |  User Interaction   |
+                        +---------------------+
+                                   |
+                                   v
+                        +---------------------+
+                        |  Authentication     |
+                        |  (OAuth/Local/API)  |
+                        +---------------------+
+                                   |
+                                   v
+                        +---------------------+
+                        |  Choose Operation   |
+                        +---------------------+
+                                   |
+                +------------------+------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Embed Data Flow    |                |  Extract Data Flow  |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Load Source Image  |                | Load Modified Image |
+    |  - File Upload      |                | - File Upload       |
+    |  - URL Input        |                | - Collection Select |
+    |  - Collection Select|                | - API Input         |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Validate Image     |                |  Validate Image     |
+    |  - Format Check     |                | - Format Check      |
+    |  - Size Check       |                | - Size Check        |
+    |  - Quality Check    |                | - Quality Check     |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Load Data to Hide  |                |  Process Image      |
+    |  - File Upload      |                | - Format Convert    |
+    |  - Text Input       |                | - Quality Adjust    |
+    |  - URL Input        |                | - Prepare for AI    |
+    |  - API Input        |                +---------------------+
+    +---------------------+                          |
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Validate Data      |                |  Call AI Model      |
+    |  - Size Check       |                |  (Extraction)       |
+    |  - Format Check     |                | - Send to Model     |
+    |  - Type Check       |                | - Process Response  |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Prepare for AI     |                |  Process Data       |
+    |  - Format Convert   |                | - Decrypt           |
+    |  - Compress         |                | - Decompress        |
+    |  - Encrypt          |                | - Format Convert    |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Call AI Model      |                |  Validate Data      |
+    |  (Embedding)        |                | - Integrity Check   |
+    |  - Send to Model    |                | - Format Check      |
+    |  - Process Response |                | - Type Check        |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Process Image      |                |  Execute/Display    |
+    |  - Format Convert   |                | - File Download     |
+    |  - Quality Adjust   |                | - Text Display      |
+    |  - Metadata Update  |                | - URL Redirect      |
+    +---------------------+                | - API Response      |
+                |                          +---------------------+
+                v                                     |
+    +---------------------+                          |
+    |  Save Modified      |                          |
+    |  Image              |                          |
+    +---------------------+                          |
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Update Collection  |                |  Log Activity       |
+    |  (Optional)         |                | - Operation Type    |
+    |  - Store Copy       |                | - Success/Failure   |
+    |  - Update Metadata  |                | - Performance       |
+    |  - Share Options    |                | - User Info         |
+    +---------------------+                +---------------------+
+                |                                     |
+                +------------------+------------------+
+                                   |
+                                   v
+                                [End]
+
+Component Details:
+-----------------
+
+Client Layer:
+-------------
+- Web Interface
+  * React-based SPA
+  * Responsive design
+  * Progressive Web App support
+  * Offline capabilities
+  * Real-time updates
+  * Accessibility features
+- API Client
+  * REST/GraphQL client
+  * WebSocket support
+  * Error handling
+  * Retry mechanisms
+  * Caching layer
+
+API Layer:
+----------
+- API Gateway
+  * Request routing
+  * Load balancing
+  * Service discovery
+  * Protocol translation
+  * Request/Response transformation
+- Authentication
+  * JWT validation
+  * Session management
+  * OAuth integration
+  * 2FA support
+  * API key management
+- Rate Limiter
+  * Request throttling
+  * Quota management
+  * Burst handling
+  * IP-based limits
+  * User-based limits
+- Cache
+  * Response caching
+  * Cache invalidation
+  * Distributed caching
+  * Cache warming
+
+Core Services:
+-------------
+- Image Processing
+  * Image validation
+  * Format conversion
+  * Compression
+  * Thumbnail generation
+  * Metadata extraction
+- Data Management
+  * Data validation
+  * Data transformation
+  * Data enrichment
+  * Data versioning
+  * Data cleanup
+- User Management
+  * User authentication
+  * Profile management
+  * Role management
+  * Permission system
+  * Activity tracking
+- Storage
+  * File storage
+  * Database management
+  * Backup management
+  * Data replication
+  * Data migration
+- Analytics
+  * Usage tracking
+  * Performance metrics
+  * Error tracking
+  * User behavior
+  * System health
+
+Processing Layer:
+----------------
+- Image Engine
+  * AI model integration
+  * Image analysis
+  * Feature extraction
+  * Quality assessment
+  * Batch processing
+- Data Engine
+  * Data processing
+  * Data transformation
+  * Data validation
+  * Data enrichment
+  * Data export
+
+Storage Layer:
+-------------
+- File Storage
+  * Distributed storage
+  * File versioning
+  * Access control
+  * Backup system
+  * Recovery system
+- Database
+  * Data persistence
+  * Query optimization
+  * Index management
+  * Data integrity
+  * Transaction management
+- Cache
+  * In-memory caching
+  * Distributed cache
+  * Cache invalidation
+  * Cache warming
+  * Cache monitoring
+
+Security Layer:
+--------------
+- Authentication
+  * User authentication
+  * Session management
+  * Token management
+  * Security policies
+  * Audit logging
+- Security
+  * Encryption
+  * Key management
+  * Security monitoring
+  * Vulnerability scanning
+  * Incident response
+
+External Services:
+-----------------
+- OAuth Providers
+  * Google OAuth
+  * GitHub OAuth
+  * Custom OAuth
+  * Token management
+  * User mapping
+- Cloud Storage
+  * S3 integration
+  * GCS integration
+  * Azure Blob
+  * Backup storage
+  * Archive storage
+- Monitoring
+  * System monitoring
+  * Performance monitoring
+  * Error tracking
+  * Alerting system
+  * Logging system
+- Backup
+  * Automated backups
+  * Incremental backups
+  * Backup verification
+  * Recovery testing
+  * Backup rotation
+
+Data Flow:
+----------
+1. Client requests processed through API Gateway
+2. Authentication and rate limiting applied
+3. Request routed to appropriate core service
+4. Processing layer handles complex operations
+5. Results stored in appropriate storage system
+6. Response returned to client
+7. Security and monitoring throughout
+
+Security Measures:
+-----------------
+- End-to-end encryption
+- Regular security audits
+- Automated vulnerability scanning
+- Incident response plan
+- Data backup and recovery
+- Access control and permissions
+- Audit logging
+- Security monitoring
+
+Monitoring:
+-----------
+- System health
+- Performance metrics
+- Error tracking
+- User activity
+- Security events
+- Resource usage
+- API usage
+- Cache performance
+
+Legend:
+-------
+------> : Data Flow
+Service : Core Processing Services
+Storage : Data Storage Systems
+Security: Security Services
+External: External Integrations
+[ ] : Process Step
++---+ : Supporting System
+--> : Flow Direction 

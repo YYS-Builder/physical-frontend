@@ -1,0 +1,132 @@
++----------------------------------------------------------------------------------------------------------+
+|                                      Detailed Reader System Flowchart                                      |
++----------------------------------------------------------------------------------------------------------+
+
+                                [Start]
+                                   |
+                                   v
+                        +---------------------+
+                        |  User Interaction   |
+                        +---------------------+
+                                   |
+                                   v
+                        +---------------------+
+                        |  Authentication     |
+                        |  (OAuth/Local/API)  |
+                        +---------------------+
+                                   |
+                                   v
+                        +---------------------+
+                        |  Choose Operation   |
+                        +---------------------+
+                                   |
+                +------------------+------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Embed Data Flow    |                |  Extract Data Flow  |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Load Source Image  |                | Load Modified Image |
+    |  - File Upload      |                | - File Upload       |
+    |  - URL Input        |                | - Collection Select |
+    |  - Collection Select|                | - API Input         |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Validate Image     |                |  Validate Image     |
+    |  - Format Check     |                | - Format Check      |
+    |  - Size Check       |                | - Size Check        |
+    |  - Quality Check    |                | - Quality Check     |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Load Data to Hide  |                |  Process Image      |
+    |  - File Upload      |                | - Format Convert    |
+    |  - Text Input       |                | - Quality Adjust    |
+    |  - URL Input        |                | - Prepare for AI    |
+    |  - API Input        |                +---------------------+
+    +---------------------+                          |
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Validate Data      |                |  Call AI Model      |
+    |  - Size Check       |                |  (Extraction)       |
+    |  - Format Check     |                | - Send to Model     |
+    |  - Type Check       |                | - Process Response  |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Prepare for AI     |                |  Process Data       |
+    |  - Format Convert   |                | - Decrypt           |
+    |  - Compress         |                | - Decompress        |
+    |  - Encrypt          |                | - Format Convert    |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Call AI Model      |                |  Validate Data      |
+    |  (Embedding)        |                | - Integrity Check   |
+    |  - Send to Model    |                | - Format Check      |
+    |  - Process Response |                | - Type Check        |
+    +---------------------+                +---------------------+
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Process Image      |                |  Execute/Display    |
+    |  - Format Convert   |                | - File Download     |
+    |  - Quality Adjust   |                | - Text Display      |
+    |  - Metadata Update  |                | - URL Redirect      |
+    +---------------------+                | - API Response      |
+                |                          +---------------------+
+                v                                     |
+    +---------------------+                          |
+    |  Save Modified      |                          |
+    |  Image              |                          |
+    +---------------------+                          |
+                |                                     |
+                v                                     v
+    +---------------------+                +---------------------+
+    |  Update Collection  |                |  Log Activity       |
+    |  (Optional)         |                | - Operation Type    |
+    |  - Store Copy       |                | - Success/Failure   |
+    |  - Update Metadata  |                | - Performance       |
+    |  - Share Options    |                | - User Info         |
+    +---------------------+                +---------------------+
+                |                                     |
+                +------------------+------------------+
+                                   |
+                                   v
+                                [End]
+
++----------------------------------------------------------------------------------------------------------+
+|                                           Supporting Systems                                              |
++----------------------------------------------------------------------------------------------------------+
+
++----------------+     +----------------+     +----------------+     +----------------+
+|  Storage       |     |  Security      |     |  Monitoring    |     |  Analytics     |
++----------------+     +----------------+     +----------------+     +----------------+
+| File System    |     | Authentication |     | Performance    |     | Usage Stats    |
+| Database       |     | Authorization  |     | Error Tracking |     | User Behavior  |
+| Cache          |     | Encryption     |     | Health Checks  |     | System Metrics |
+| Backup         |     | Audit Logging  |     | Alerts         |     | Reports        |
++----------------+     +----------------+     +----------------+     +----------------+
+
++----------------+     +----------------+     +----------------+
+|  AI Model      |     |  API Gateway   |     |  Collection   |
++----------------+     +----------------+     +----------------+
+| Embedding      |     | Rate Limiting  |     | Management    |
+| Extraction     |     | Request Routing|     | Organization  |
+| Validation     |     | Error Handling |     | Sharing       |
+| Processing     |     | Caching        |     | Backup        |
++----------------+     +----------------+     +----------------+
+
+Legend:
+[ ] : Process Step
++---+ : Supporting System
+--> : Flow Direction 

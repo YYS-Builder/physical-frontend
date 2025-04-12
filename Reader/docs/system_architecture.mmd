@@ -1,0 +1,77 @@
+graph TD
+    subgraph Client
+        UI[Web Interface]
+        API[API Client]
+    end
+
+    subgraph API Layer
+        GW[API Gateway]
+        Auth[Authentication]
+        Rate[Rate Limiter]
+        Cache[Cache]
+    end
+
+    subgraph Core Services
+        IP[Image Processing]
+        DM[Data Management]
+        UM[User Management]
+        ST[Storage]
+        AN[Analytics]
+    end
+
+    subgraph Processing
+        IPE[Image Processing Engine]
+        DPE[Data Processing Engine]
+    end
+
+    subgraph Storage
+        FS[File Storage]
+        DB[(Database)]
+        Cache2[Cache]
+    end
+
+    subgraph Security
+        Auth2[Authentication Service]
+        Sec[Security Service]
+    end
+
+    subgraph External
+        OAuth[OAuth Providers]
+        Cloud[Cloud Storage]
+        Monitor[Monitoring]
+        Backup[Backup System]
+    end
+
+    %% Connections
+    UI --> API
+    API --> GW
+    GW --> Auth
+    GW --> Rate
+    GW --> Cache
+    Auth --> IP
+    Auth --> DM
+    Auth --> UM
+    Auth --> ST
+    Auth --> AN
+    IP --> IPE
+    DM --> DPE
+    IPE --> FS
+    DPE --> DB
+    UM --> DB
+    ST --> FS
+    AN --> DB
+    Auth2 --> OAuth
+    Sec --> Monitor
+    FS --> Cloud
+    DB --> Backup
+
+    %% Styling
+    classDef service fill:#f9f,stroke:#333,stroke-width:2px
+    classDef storage fill:#bbf,stroke:#333,stroke-width:2px
+    classDef security fill:#fbb,stroke:#333,stroke-width:2px
+    classDef external fill:#bfb,stroke:#333,stroke-width:2px
+
+    class IP,DM,UM,ST,AN service
+    class FS,DB,Cache2 storage
+    class Auth2,Sec security
+    class OAuth,Cloud,Monitor,Backup external 
